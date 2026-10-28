@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#101426">
+<title>QuizVerse — Play Smart</title>
+<style>
+:root{--bg:#101426;--panel:#191f36;--panel2:#222a45;--text:#f5f7ff;--muted:#aeb7d4;--purple:#8b7cff;--cyan:#58e1d2;--gold:#ffd166;--danger:#ff718b}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#25244b 0,#101426 52%);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,sans-serif;min-height:100vh}
+button{font:inherit;cursor:pointer;border:0}button:focus-visible{outline:3px solid var(--cyan);outline-offset:3px}
+.wrap{max-width:850px;margin:auto;padding:18px 15px 36px}.top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:22px}
+.brand{font-weight:900;letter-spacing:-.7px;font-size:23px}.brand span{color:var(--cyan)}.pill{border:1px solid #39415f;color:var(--muted);border-radius:999px;padding:8px 11px;font-size:12px;background:#171d32}
+.hero{padding:26px 22px;border-radius:25px;background:linear-gradient(135deg,#29254f,#1a2942);border:1px solid #41446b;box-shadow:0 16px 45px #05071455;margin-bottom:16px}
+.kicker{color:var(--cyan);font-weight:800;font-size:11px;letter-spacing:2px;text-transform:uppercase}.hero h1{font-size:clamp(30px,8vw,48px);line-height:1.04;margin:10px 0}.hero p{color:var(--muted);line-height:1.6;margin:0 0 18px}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin:15px 0}.stat{background:#ffffff0b;border:1px solid #ffffff13;padding:12px;border-radius:15px}.stat b{display:block;font-size:21px}.stat small{color:var(--muted);font-size:11px}
+.btn{padding:13px 16px;border-radius:13px;font-weight:800;transition:transform .12s}.btn:active{transform:scale(.98)}.primary{background:linear-gradient(100deg,var(--purple),#6b8cff);color:white}.secondary{background:var(--panel2);color:var(--text);border:1px solid #3b4568}.outline{background:transparent;color:var(--text);border:1px solid #4a5374}.btnrow{display:flex;flex-wrap:wrap;gap:9px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.card{background:#191f36eF;border:1px solid #303958;border-radius:20px;padding:18px;margin-bottom:14px}.card h2{font-size:17px;margin:0 0 12px}.muted{color:var(--muted);font-size:13px;line-height:1.5}
+.category{width:100%;text-align:left;display:flex;align-items:center;gap:12px;padding:14px;margin:8px 0;border-radius:14px;background:var(--panel2);color:var(--text);border:1px solid #384361}.category .emoji{font-size:24px}.category b{display:block}.category small{color:var(--muted)}.category:active,.answer:active{transform:scale(.99)}
+.hidden{display:none!important}.screen{display:none}.screen.active{display:block}.questiontop{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:15px}.progress{height:7px;background:#333b58;border-radius:9px;overflow:hidden;margin:10px 0 20px}.progress span{height:100%;display:block;background:linear-gradient(90deg,var(--cyan),var(--purple));width:0;transition:width .2s}.qtext{font-size:clamp(22px,5.5vw,30px);line-height:1.25;margin:15px 0 20px}.answer{display:flex;width:100%;align-items:center;text-align:left;gap:12px;margin:9px 0;padding:14px;border-radius:14px;background:#242c47;border:1px solid #3c4667;color:var(--text);min-height:56px}.letter{width:30px;height:30px;display:grid;place-items:center;border-radius:9px;background:#363e5f;color:#d8ddf4;font-weight:800;flex-shrink:0}.answer.correct{border-color:#4bd6a5;background:#153c3b}.answer.wrong{border-color:var(--danger);background:#43263b}.answer:disabled{cursor:default}.feedback{margin:12px 0;color:var(--cyan);font-weight:700;min-height:22px}.timer{font-weight:900;color:var(--gold)}.rowbetween{display:flex;justify-content:space-between;align-items:center;gap:10px}.rank{display:flex;align-items:center;gap:11px;padding:10px 0;border-bottom:1px solid #303958}.rank:last-child{border:0}.ranknum{width:30px;height:30px;display:grid;place-items:center;border-radius:10px;background:#2b3350;font-weight:800}.rankname{flex:1;min-width:0}.rankname b{display:block;overflow:hidden;text-overflow:ellipsis}.rankname small{color:var(--muted)}.rankscore{font-weight:900;color:var(--gold)}.notice{border:1px solid #615a35;background:#38331e;color:#f6e3a0;padding:12px;border-radius:12px;font-size:12px;line-height:1.5;margin-top:12px}.footer{text-align:center;color:#747f9f;font-size:11px;margin-top:24px}.google{width:100%;margin-top:10px;background:white;color:#252525;display:flex;justify-content:center;align-items:center;gap:10px}.google strong{font-size:16px}.smallbtn{padding:8px 10px;font-size:12px}
+@media(max-width:560px){.grid{grid-template-columns:1fr}.hero{padding:22px 17px}.wrap{padding:14px 12px 28px}.brand{font-size:21px}.stats{gap:7px}.stat{padding:10px}.stat b{font-size:18px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="top">
+  <div class="brand">Quiz<span>Verse</span> ✦</div>
+  <div class="btnrow"><button id="musicBtn" class="btn secondary smallbtn" aria-label="Toggle music">♫ Music: Off</button><span id="userPill" class="pill">Guest player</span></div>
+</header>
+
+<section id="home" class="screen active">
+  <div class="hero">
+    <div class="kicker">Think fast. Rise higher.</div>
+    <h1>Your next<br>brain battle.</h1>
+    <p>Quick questions, big brain energy. Play a round, beat your best score, and climb your personal leaderboard.</p>
+    <div class="stats">
+      <div class="stat"><b id="bestStat">0</b><small>PERSONAL BEST</small></div>
+      <div class="stat"><b id="playedStat">0</b><small>ROUNDS PLAYED</small></div>
+      <div class="stat"><b>10</b><small>QUESTIONS / ROUND</small></div>
+    </div>
+    <div class="btnrow"><button id="playBtn" class="btn primary">Start a quiz →</button><button id="loginBtn" class="btn outline">Google sign-in</button></div>
+    <div class="notice">Starter version: your progress and leaderboard are saved on this device. Google login, shared online scores and live multiplayer need the PHP server setup in the next stage.</div>
+  </div>
+  <div class="grid">
+    <div class="card"><h2>🎯 Choose your arena</h2>
+      <button class="category" data-category="mixed"><span class="emoji">🧠</span><span><b>Brain Mix</b><small>General knowledge · 10 questions</small></span></button>
+      <button class="category" data-category="tech"><span class="emoji">💻</span><span><b>Tech Zone</b><small>Computers · Coding basics</small></span></button>
+    </div>
+    <div class="card"><h2>🏆 Your leaderboard</h2><p class="muted">Best scores saved in this browser.</p><div id="leaderboard"></div><button id="resetBtn" class="btn secondary smallbtn" style="margin-top:12px">Reset local data</button></div>
+  </div>
+</section>
+
+<section id="quiz" class="screen">
+  <div class="card">
+    <div class="questiontop"><span class="pill" id="categoryLabel">BRAIN MIX</span><span class="timer">⏱ <span id="timer">20</span>s</span><span class="pill">Score <b id="scoreNow">0</b></span></div>
+    <div class="progress"><span id="progressBar"></span></div>
+    <div class="muted" id="questionCount">QUESTION 1 / 10</div>
+    <h2 class="qtext" id="questionText">Question goes here</h2>
+    <div id="answers"></div>
+    <div id="feedback" class="feedback" aria-live="polite"></div>
+    <div class="rowbetween"><button id="quitBtn" class="btn outline smallbtn">Exit quiz</button><button id="nextBtn" class="btn primary" disabled>Next question →</button></div>
+  </div>
+</section>
+
+<section id="result" class="screen">
+  <div class="hero" style="text-align:center">
+    <div class="kicker">Round complete</div><h1 id="resultTitle">Nice work!</h1>
+    <p id="resultText">Your result is ready.</p>
+    <div class="stats"><div class="stat"><b id="finalScore">0</b><small>POINTS</small></div><div class="stat"><b id="correctCount">0/10</b><small>CORRECT</small></div><div class="stat"><b id="accuracy">0%</b><small>ACCURACY</small></div></div>
+    <div class="btnrow" style="justify-content:center"><button id="againBtn" class="btn primary">Play again ↻</button><button id="homeBtn" class="btn secondary">Home</button></div>
+  </div>
+  <div class="card"><h2>🏆 Updated personal leaderboard</h2><div id="resultLeaderboard"></div></div>
+</section>
+<div class="footer">QuizVerse · Learn something new every round<br>Starter build · Local data stays in this browser</div>
+</div>
+<script>
+const QUESTIONS = {
+mixed: [
+ {q:"Which planet is known as the Red Planet?",a:["Venus","Mars","Jupiter","Mercury"],c:1},
+ {q:"How many sides does a hexagon have?",a:["Five","Seven","Six","Eight"],c:2},
+ {q:"Which ocean is the largest?",a:["Atlantic","Indian","Arctic","Pacific"],c:3},
+ {q:"What do plants mainly absorb from the air?",a:["Oxygen","Carbon dioxide","Helium","Hydrogen"],c:1},
+ {q:"How many minutes are there in one hour?",a:["30","45","60","100"],c:2},
+ {q:"Which animal is the tallest in the world?",a:["Elephant","Giraffe","Ostrich","Camel"],c:1},
+ {q:"What is the freezing point of water in Celsius?",a:["0°C","10°C","32°C","100°C"],c:0},
+ {q:"Which shape has three sides?",a:["Square","Circle","Triangle","Rectangle"],c:2},
+ {q:"Which star is closest to Earth?",a:["Sirius","Polaris","The Sun","Vega"],c:2},
+ {q:"How many days are there in a leap year?",a:["364","365","366","367"],c:2}
+],
+tech: [
+ {q:"What does CPU stand for?",a:["Central Processing Unit","Computer Power Utility","Core Program User","Central Print Unit"],c:0},
+ {q:"Which one is a programming language?",a:["HTML only","Python","Wi-Fi","USB"],c:1},
+ {q:"Which symbol commonly ends a statement in C?",a:["Colon :","Comma ,","Semicolon ;","Hash #"],c:2},
+ {q:"What does RAM mainly provide?",a:["Temporary working memory","Permanent paper storage","Internet access","Screen brightness"],c:0},
+ {q:"Which of these is an input device?",a:["Monitor","Speaker","Keyboard","Projector"],c:2},
+ {q:"What does URL identify?",a:["A web address","A computer battery","A file size","A keyboard key"],c:0},
+ {q:"Which number system uses only 0 and 1?",a:["Decimal","Binary","Roman","Hexadecimal only"],c:1},
+ {q:"Which language styles a web page?",a:["CSS","SQL","C","Bash"],c:0},
+ {q:"What does SQL help you work with?",a:["Databases","Video cables","Photo filters","Sound waves"],c:0},
+ {q:"Which part stores instructions and data long-term?",a:["RAM only","CPU register","SSD or hard drive","Cache only"],c:2}
+]};
+const $=id=>document.getElementById(id);
+let category="mixed",questions=[],index=0,score=0,correct=0,locked=false,timer=20,timerId=null;
+let audioCtx=null,musicTimer=null,musicOn=false;
+const read=(key,def)=>{try{return JSON.parse(localStorage.getItem(key))??def}catch{return def}};
+const write=(key,val)=>localStorage.setItem(key,JSON.stringify(val));
+const playerName=()=>read("qv_name","Guest Player");
+function showScreen(id){document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));$(id).classList.add("active");window.scrollTo(0,0)}
+function init(){updateStats();renderLeaderboard();$("userPill").textContent=playerName();if(read("qv_progress",null)){$("playBtn").textContent="Continue saved quiz →"}}
+function updateStats(){const scores=read("qv_scores",[]);$("bestStat").textContent=Math.max(0,...scores.map(s=>s.score));$("playedStat").textContent=read("qv_played",0)}
+function renderLeaderboard(target="leaderboard"){const rows=read("qv_scores",[]).slice().sort((a,b)=>b.score-a.score).slice(0,5);const el=$(target);el.innerHTML="";if(!rows.length){el.innerHTML='<p class="muted">No scores yet. Play your first round!</p>';return}rows.forEach((r,i)=>{const d=document.createElement("div");d.className="rank";d.innerHTML=`<span class="ranknum">${i+1}</span><span class="rankname"><b></b><small>${new Date(r.date).toLocaleDateString()}</small></span><span class="rankscore">${r.score}</span>`;d.querySelector("b").textContent=r.name;el.appendChild(d)})}
+function tone(freq=440,duration=.12,type="sine",volume=.045){try{audioCtx=audioCtx||new(window.AudioContext||window.webkitAudioContext)();const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.type=type;o.frequency.value=freq;g.gain.value=volume;o.connect(g);g.connect(audioCtx.destination);o.start();g.gain.exponentialRampToValueAtTime(.001,audioCtx.currentTime+duration);o.stop(audioCtx.currentTime+duration)}catch{}}
+function sfx(kind){if(kind==="good"){tone(660,.12);setTimeout(()=>tone(880,.16),90)}else if(kind==="bad")tone(180,.2,"triangle");else tone(520,.08)}
+function toggleMusic(){musicOn=!musicOn;$("musicBtn").textContent=musicOn?"♫ Music: On":"♫ Music: Off";if(musicOn){tone(330,.25,"sine",.018);musicTimer=setInterval(()=>{if(musicOn)tone([330,392,494,392][Math.floor(Math.random()*4)],.25,"sine",.012)},500)}else{clearInterval(musicTimer)}}
+$("musicBtn").addEventListener("click",toggleMusic);
+function startQuiz(cat=category,continueSaved=false){category=cat;let saved=continueSaved?read("qv_progress",null):null;if(saved&&saved.category===cat){questions=saved.questions;index=saved.index;score=saved.score;correct=saved.correct}else{questions=QUESTIONS[cat].map(q=>({...q})).sort(()=>Math.random()-.5);index=0;score=0;correct=0}showScreen("quiz");renderQuestion()}
+function saveProgress(){write("qv_progress",{category,questions,index,score,correct})}
+function renderQuestion(){clearInterval(timerId);locked=false;timer=20;$("timer").textContent=timer;$("scoreNow").textContent=score;$("categoryLabel").textContent=category==="tech"?"TECH ZONE":"BRAIN MIX";$("questionCount").textContent=`QUESTION ${index+1} / ${questions.length}`;$("progressBar").style.width=`${index/questions.length*100}%`;const q=questions[index];$("questionText").textContent=q.q;$("answers").innerHTML="";$("feedback").textContent="";$("nextBtn").disabled=true;$("nextBtn").textContent=index===questions.length-1?"See results →":"Next question →";q.a.forEach((ans,i)=>{const b=document.createElement("button");b.className="answer";b.innerHTML=`<span class="letter">${"ABCD"[i]}</span><span></span>`;b.querySelector("span:last-child").textContent=ans;b.addEventListener("click",()=>answer(i,b));$("answers").appendChild(b)});saveProgress();timerId=setInterval(()=>{timer--;$("timer").textContent=timer;if(timer<=0){clearInterval(timerId);if(!locked)answer(-1,null,true)}},1000)}
+function answer(choice,button,timedOut=false){if(locked)return;locked=true;clearInterval(timerId);const q=questions[index],buttons=[...$("answers").querySelectorAll("button")];buttons.forEach((b,i)=>{b.disabled=true;if(i===q.c)b.classList.add("correct")});if(choice===q.c){correct++;score+=100+timer*5;$("feedback").textContent="Correct! Great thinking. +"+(100+timer*5);sfx("good")}else{if(button)button.classList.add("wrong");$("feedback").textContent=timedOut?"Time's up!":"Not quite. The correct answer is "+q.a[q.c];sfx("bad")} $("scoreNow").textContent=score;$("nextBtn").disabled=false;write("qv_progress",{category,questions,index,score,correct})}
+$("nextBtn").addEventListener("click",()=>{if(!locked)return;if(index<questions.length-1){index++;renderQuestion()}else finishQuiz()});
+function finishQuiz(){clearInterval(timerId);localStorage.removeItem("qv_progress");const played=read("qv_played",0)+1;write("qv_played",played);const scores=read("qv_scores",[]);scores.push({name:playerName(),score,correct,total:questions.length,date:new Date().toISOString()});write("qv_scores",scores.slice(-30));$("finalScore").textContent=score;$("correctCount").textContent=`${correct}/${questions.length}`;$("accuracy").textContent=Math.round(correct/questions.length*100)+"%";$("resultTitle").textContent=correct>=8?"Quiz champion!":correct>=5?"Nice work!":"Keep practising!";$("resultText").textContent=`You answered ${correct} out of ${questions.length} correctly. Every round makes you sharper.`;updateStats();renderLeaderboard("resultLeaderboard");renderLeaderboard();showScreen("result");tone(660,.18);setTimeout(()=>tone(784,.2),130)}
+$("playBtn").addEventListener("click",()=>{const p=read("qv_progress",null);if(p)startQuiz(p.category,true);else startQuiz(category)});
+document.querySelectorAll("[data-category]").forEach(b=>b.addEventListener("click",()=>{category=b.dataset.category;startQuiz(category)}));
+$("againBtn").addEventListener("click",()=>startQuiz(category));$("homeBtn").addEventListener("click",()=>{showScreen("home");init()});$("quitBtn").addEventListener("click",()=>{clearInterval(timerId);saveProgress();showScreen("home");init()});
+$("loginBtn").addEventListener("click",()=>alert("Google sign-in is added in the backend stage. First publish this frontend; then we will configure Google OAuth and the PHP API."));
+$("resetBtn").addEventListener("click",()=>{if(confirm("Clear this device's QuizVerse scores and saved quiz?")){["qv_scores","qv_progress","qv_played"].forEach(k=>localStorage.removeItem(k));init()}});
+init();
+</script>
+</body>
+</html>
